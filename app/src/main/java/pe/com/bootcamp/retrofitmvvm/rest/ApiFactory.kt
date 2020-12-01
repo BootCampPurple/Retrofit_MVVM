@@ -11,8 +11,6 @@ import java.util.concurrent.TimeUnit
 object ApiFactory {
 
 
-
-
     private var servicesApiInterface: ApiService? = null
 
     private val ceClient = OkHttpClient().newBuilder()
@@ -25,7 +23,7 @@ object ApiFactory {
     fun build(): ApiService? {
         val builder: Retrofit.Builder = Retrofit.Builder()
             .client(ceClient)
-            .baseUrl("BASE_URL")
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
 
         /*vval httpClient: OkHttpClient.Builder = OkHttpClient.Builder()

@@ -5,7 +5,7 @@ package pe.com.bootcamp.retrofitmvvm.util
 object Constants {
 
     //Web Service IP
-
+    const val BASE_URL = "http://demo4049540.mockable.io/"
     const val GENERAL_EMPTY_TEXT = 0
     const val REST_TIMEOUT = 25.toLong()
     const val GENERAL_LOG_APP_TAG = "CED_LOG"
@@ -21,7 +21,12 @@ object Constants {
     const val INT_SRV_ERROR = 500
     const val UNAUTHORIZED = 401
 
-    /*Fonts*/
+
+
+    enum class EnumViewLoading {
+        VIEW_BACKGROUND_TRANSPARENT,
+        VIEW_BACKGROUND_WHITE
+    }
 
 
 }

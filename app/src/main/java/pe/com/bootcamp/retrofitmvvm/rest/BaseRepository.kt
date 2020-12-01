@@ -4,12 +4,10 @@ package pe.com.bootcamp.retrofitmvvm.rest
 import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
+import pe.com.bootcamp.retrofitmvvm.model.ErrorObjectResponse
+import pe.com.bootcamp.retrofitmvvm.model.NetworkMessage
+import pe.com.bootcamp.retrofitmvvm.util.AppUtils
 import pe.com.bootcamp.retrofitmvvm.util.Constants
-import pe.gob.migraciones.cedigital.model.ErrorObjectResponse
-import pe.gob.migraciones.cedigital.model.NetworkMessage
-import pe.gob.migraciones.cedigital.util.AppPreferences
-import pe.gob.migraciones.cedigital.util.AppUtils
-import pe.gob.migraciones.cedigital.util.Constants
 import retrofit2.Response
 import java.io.IOException
 
@@ -33,24 +31,27 @@ open class BaseRepository {
             Log.i(Constants.GENERAL_LOG_APP_TAG, response.body().toString())
             Log.i(Constants.GENERAL_LOG_APP_TAG, response.raw().networkResponse.toString())
 
-
-
-
             if (response.isSuccessful) return Result.Success(response.body()!!)
-
-            val jsonObject = JSONObject(response.errorBody()!!.string())
-            val message: ErrorObjectResponse = AppUtils.fromJson(jsonObject.toString())
 
 
             var networkMessage = NetworkMessage("", 0)
 
-            message.mensaje?.let {
-                networkMessage =
-                    NetworkMessage(message.mensaje!!, response.raw().code)
+            response.errorBody()?.let {
+
+                val jsonObject = JSONObject(it.string())
+
+                val message: ErrorObjectResponse = AppUtils.fromJson(jsonObject.toString())
+
+
+                if (message.exceptionMessage.isNotEmpty()) {
+                    networkMessage =
+                        NetworkMessage(message.exceptionMessage, response.raw().code)
+                }
             }
 
-
             return Result.ApiError(networkMessage)
+
+
         } catch (e: IOException) {
 
             return Result.NetworkError(e)
