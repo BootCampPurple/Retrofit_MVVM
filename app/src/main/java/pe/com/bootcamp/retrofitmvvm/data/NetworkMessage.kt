@@ -1,6 +1,5 @@
-package pe.com.bootcamp.retrofitmvvm.model
+package pe.com.bootcamp.retrofitmvvm.data
 
-import pe.com.bootcamp.retrofitmvvm.R
 import pe.com.bootcamp.retrofitmvvm.util.Constants
 
 

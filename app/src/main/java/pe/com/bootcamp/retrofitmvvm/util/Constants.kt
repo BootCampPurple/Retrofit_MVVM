@@ -29,4 +29,7 @@ object Constants {
     }
 
 
+    /*Intent*/
+    const val INTENT_TITLE = "intentTitle"
+    const val INTENT_VALUE = "intentValue"
 }

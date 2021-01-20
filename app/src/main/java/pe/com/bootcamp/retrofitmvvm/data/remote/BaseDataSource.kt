@@ -1,4 +1,4 @@
-package pe.com.bootcamp.retrofitmvvm.rest
+package pe.com.bootcamp.retrofitmvvm.data.remote
 
 
 import android.util.Log
@@ -12,7 +12,7 @@ import retrofit2.Response
 import java.io.IOException
 
 
-open class BaseRepository {
+open class BaseDataSource {
 
     suspend fun <T : Any> safeApiCall(call: suspend () -> Response<T>): Result<T> {
 
@@ -31,30 +31,27 @@ open class BaseRepository {
             Log.i(Constants.GENERAL_LOG_APP_TAG, response.body().toString())
             Log.i(Constants.GENERAL_LOG_APP_TAG, response.raw().networkResponse.toString())
 
-            if (response.isSuccessful) return Result.Success(response.body()!!)
+
+
+
+            if (response.isSuccessful) {
+
+                return Result.Success(response.body()!!)
+            }
+
+            val jsonObject = JSONObject(response.errorBody()!!.string())
+            val message: ErrorObjectResponse = AppUtils.fromJson(jsonObject.toString())
 
 
             var networkMessage = NetworkMessage("", 0)
 
-            response.errorBody()?.let {
-
-                val jsonObject = JSONObject(it.string())
-
-                val message: ErrorObjectResponse = AppUtils.fromJson(jsonObject.toString())
-
-
-                if (message.exceptionMessage.isNotEmpty()) {
-                    networkMessage =
-                        NetworkMessage(message.exceptionMessage, response.raw().code)
-                }
+            message.exceptionMessage.let {
+                networkMessage =
+                    NetworkMessage(it, response.raw().code)
             }
 
+
             return Result.ApiError(networkMessage)
-
-
-        } catch (e: IOException) {
-
-            return Result.NetworkError(e)
         } catch (e: JSONException) {
             return Result.ApiError(NetworkMessage("", 0))
         }
@@ -72,10 +69,7 @@ sealed class Result<out T : Any> {
      */
     data class ApiError(val exception: NetworkMessage) : Result<Nothing>()
 
-    /**
-     * Network error
-     */
-    data class NetworkError(val error: IOException) : Result<Nothing>()
+
 
     /**
      * For example, json parsing error

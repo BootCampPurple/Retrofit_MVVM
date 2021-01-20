@@ -2,4 +2,7 @@
     <string name="app_name">Retrofit MVVM</string>
 
     <string name="general_loading">Cargando...</string>
+
+    <string name="butLogin">Login</string>
+
 </resources>

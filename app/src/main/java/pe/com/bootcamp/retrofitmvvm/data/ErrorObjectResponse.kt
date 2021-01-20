@@ -1,7 +1,7 @@
-package pe.com.bootcamp.retrofitmvvm.model
+package pe.com.bootcamp.retrofitmvvm.data
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 
 @Parcelize
