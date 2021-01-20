@@ -25,48 +25,6 @@ class BCPViewModel @ViewModelInject constructor(private val repository: BCPRepos
     val discount: LiveData<List<Discount>> = _discount
 
 
-    fun doDashboardFetch() {
-        _isViewLoading.postValue(true)
-
-        viewModelScope.launch {
-            val result: Result<DashboardResponse> = withContext(Dispatchers.IO) {
-                repository.dashboardBCP()
-            }
-            _isViewLoading.postValue(false)
-            when (result) {
-                is Result.Success -> {
-
-                    _dashboard.value = result.data
-
-                }
-                is Result.ApiError -> _onMessageError.postValue(result.exception)
-
-
-            }
-        }
-    }
-
-    fun doDiscountFetch() {
-        _isViewLoading.postValue(true)
-
-        viewModelScope.launch {
-            val result: Result<DiscountResponse> = withContext(Dispatchers.IO) {
-                repository.discountBCP()
-            }
-            _isViewLoading.postValue(false)
-            when (result) {
-                is Result.Success -> {
-
-                    _discount.value = result.data.discounts
-
-                }
-
-
-                is Result.ApiError -> _onMessageError.postValue(result.exception)
-
-            }
-        }
-    }
 
 
 }

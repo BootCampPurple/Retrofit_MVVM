@@ -34,10 +34,8 @@ open class BaseDataSource {
 
 
 
-            if (response.isSuccessful) {
+            if (response.isSuccessful) return Result.Success(response.body()!!)
 
-                return Result.Success(response.body()!!)
-            }
 
             val jsonObject = JSONObject(response.errorBody()!!.string())
             val message: ErrorObjectResponse = AppUtils.fromJson(jsonObject.toString())
@@ -68,7 +66,6 @@ sealed class Result<out T : Any> {
      * Failure response with body
      */
     data class ApiError(val exception: NetworkMessage) : Result<Nothing>()
-
 
 
     /**

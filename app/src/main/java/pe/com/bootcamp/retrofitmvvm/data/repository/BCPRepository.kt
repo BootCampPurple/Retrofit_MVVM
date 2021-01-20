@@ -11,11 +11,6 @@ class BCPRepository @Inject constructor(
 ) {
 
 
-    suspend fun dashboardBCP(): Result<DashboardResponse> =
-        remoteDataSource.dashboardBCP()
-
-    suspend fun discountBCP(): Result<DiscountResponse> =
-        remoteDataSource.discountBCP()
 
 
 
