@@ -1,62 +1,69 @@
 package pe.com.bootcamp.retrofitmvvm.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import pe.com.bootcamp.retrofitmvvm.R
+import pe.com.bootcamp.retrofitmvvm.adapter.DiscountAdapter
 import pe.com.bootcamp.retrofitmvvm.data.NetworkMessage
 import pe.com.bootcamp.retrofitmvvm.data.entities.dashboard.DashboardResponse
-import pe.com.bootcamp.retrofitmvvm.databinding.ActivityMainBinding
+import pe.com.bootcamp.retrofitmvvm.data.entities.discount.Discount
+import pe.com.bootcamp.retrofitmvvm.databinding.ActivityDashboardBinding
+import pe.com.bootcamp.retrofitmvvm.databinding.ActivityDiscountBinding
 import pe.com.bootcamp.retrofitmvvm.util.Constants
 import pe.com.bootcamp.retrofitmvvm.viewmodel.BCPViewModel
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity() {
+class DiscountActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityMainBinding
 
+    private lateinit var binding: ActivityDiscountBinding
     private val viewModel: BCPViewModel by viewModels()
 
+    private lateinit var adapter: DiscountAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_discount)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root, R.id.claMain)
-
-
-        this.setupViewModel()
+        binding = ActivityDiscountBinding.inflate(layoutInflater)
+        setContentView(binding.root, R.id.claDiscount)
 
 
-        binding.butLogin.setOnClickListener {
-            viewModel.doDashboardFetch()
-        }
+        setupViewModel()
+
+
+        adapter = DiscountAdapter()
+
+
+        binding.rviDiscounts.layoutManager = LinearLayoutManager(this)
+        binding.rviDiscounts.adapter = adapter
+
+
+        viewModel.doDiscountFetch()
 
     }
 
 
     private fun setupViewModel() {
-        viewModel.dashboard.observe(this, dashboardObserver)
+        viewModel.discount.observe(this, discountsObserver)
         viewModel.isViewLoading.observe(this, isViewLoadingObserver)
         viewModel.onMessageError.observe(this, onMessageErrorObserver)
     }
 
-
     //region observable
 
-    private val dashboardObserver = Observer<DashboardResponse> {
-        //this.showDialog(it.employee.fullName)
-        val intent = Intent(this, DashboardActivity::class.java)
-        intent.putExtra(Constants.INTENT_VALUE, it)
+    private val discountsObserver = Observer<List<Discount>> {
 
-        startActivity(intent)
+        adapter.arrayDiscount = it
+
     }
 
     private val isViewLoadingObserver = Observer<Boolean> {
         if (it) {
-            this.showLoadingView("Cargando...")
+            this.showLoadingView("Cargando Descuentos...")
         } else {
             this.hideLoadingView()
         }
@@ -70,6 +77,4 @@ class MainActivity : BaseActivity() {
     }
 
     //endregion
-
-
 }

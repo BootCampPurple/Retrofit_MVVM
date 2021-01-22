@@ -10,11 +10,11 @@ interface ApiService {
 
     //https://www.mockable.io/a/#/space/demo4049540/rest
 
-    /*@GET("dashboardBCP")
+    @GET("dashboardBCP")
     suspend fun dashboardBCP(): Response<DashboardResponse>
 
     @GET("discountBCP")
-    suspend fun discountBCP(): Response<DiscountResponse>*/
+    suspend fun discountBCP(): Response<DiscountResponse>
 
 
 }

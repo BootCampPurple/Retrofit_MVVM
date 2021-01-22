@@ -10,6 +10,9 @@ class BCPRemoteDataSource @Inject constructor(
 ) : BaseDataSource() {
 
 
+    suspend fun dashboardBCP() = safeApiCall { service.dashboardBCP() }
+
+    suspend fun discountBCP() = safeApiCall { service.discountBCP() }
 
 
 }
