@@ -1,67 +1,68 @@
 package pe.com.bootcamp.retrofitmvvm.ui
 
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import pe.com.bootcamp.retrofitmvvm.R
 import pe.com.bootcamp.retrofitmvvm.data.NetworkMessage
 import pe.com.bootcamp.retrofitmvvm.data.entities.dashboard.DashboardResponse
+import pe.com.bootcamp.retrofitmvvm.data.entities.rickmorty.CharacterResponse
+import pe.com.bootcamp.retrofitmvvm.databinding.ActivityCharacterBinding
 import pe.com.bootcamp.retrofitmvvm.databinding.ActivityMainBinding
 import pe.com.bootcamp.retrofitmvvm.util.Constants
 import pe.com.bootcamp.retrofitmvvm.viewmodel.BCPViewModel
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity() {
+class CharacterActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityCharacterBinding
 
     private val viewModel: BCPViewModel by viewModels()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root, R.id.claMain)
+
+        binding = ActivityCharacterBinding.inflate(layoutInflater)
+        setContentView(binding.root, R.id.claCharacter)
 
 
         this.setupViewModel()
 
 
-        binding.butLogin.setOnClickListener {
-            viewModel.doDashboardFetch()
-        }
-
         binding.butCharacter.setOnClickListener {
-            val intent = Intent(this, CharacterActivity::class.java)
-            startActivity(intent)
+            viewModel.doCharacterFetch(binding.eteCharacter.text.toString())
         }
 
     }
 
 
     private fun setupViewModel() {
-        viewModel.dashboard.observe(this, dashboardObserver)
+        viewModel.character.observe(this, characterObserver)
         viewModel.isViewLoading.observe(this, isViewLoadingObserver)
         viewModel.onMessageError.observe(this, onMessageErrorObserver)
     }
 
-
     //region observable
 
-    private val dashboardObserver = Observer<DashboardResponse> {
-        //this.showDialog(it.employee.fullName)
-        val intent = Intent(this, DashboardActivity::class.java)
-        intent.putExtra(Constants.INTENT_VALUE, it)
+    private val characterObserver = Observer<CharacterResponse> {
 
-        startActivity(intent)
+        binding.tviName.text = it.name
+
+        Picasso.get()
+            .load(it.image)
+            .into(binding.iviCharacter)
+
+
     }
 
     private val isViewLoadingObserver = Observer<Boolean> {
         if (it) {
-            this.showLoadingView("Cargando...")
+            this.showLoadingView("Obteniendo Usuario...")
         } else {
             this.hideLoadingView()
         }
@@ -75,6 +76,4 @@ class MainActivity : BaseActivity() {
     }
 
     //endregion
-
-
 }

@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RetrofitMVVM"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.DiscountActivity"></activity>
+        <activity android:name=".ui.VacationActivity"></activity>
+        <activity android:name=".ui.CharacterActivity" />
+        <activity android:name=".ui.DiscountActivity" />
         <activity android:name=".ui.DashboardActivity" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
