@@ -34,6 +34,11 @@ class MainActivity : BaseActivity() {
             viewModel.doDashboardFetch()
         }
 
+        binding.butCharacter.setOnClickListener {
+            val intent = Intent(this, CharacterActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
 

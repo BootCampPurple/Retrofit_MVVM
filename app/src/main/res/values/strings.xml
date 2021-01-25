@@ -4,5 +4,6 @@
     <string name="general_loading">Cargando...</string>
 
     <string name="butLogin">Login</string>
+    <string name="lbl_vacation_save">Registrar Vacaciones</string>
 
 </resources>

@@ -33,7 +33,15 @@ object NetworkModule {
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .addInterceptor { chain ->
+                val newRequest = chain.request().newBuilder()
+                    .addHeader("unica-serviceid", "12345678")
+                    .addHeader("clientid", "BCP")
+                    .build()
 
+                chain.proceed(newRequest)
+
+            }
             //.addInterceptor(AuthInterceptor(BuildConfig.API_KEY))
             .readTimeout(Constants.REST_TIMEOUT, TimeUnit.SECONDS)
             .connectTimeout(Constants.REST_TIMEOUT, TimeUnit.SECONDS)

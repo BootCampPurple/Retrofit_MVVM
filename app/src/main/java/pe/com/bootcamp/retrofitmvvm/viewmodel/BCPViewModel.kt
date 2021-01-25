@@ -9,9 +9,12 @@ import kotlinx.coroutines.Dispatchers
 import pe.com.bootcamp.retrofitmvvm.data.remote.Result
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import pe.com.bootcamp.retrofitmvvm.data.entities.GenericResponse
 import pe.com.bootcamp.retrofitmvvm.data.entities.dashboard.DashboardResponse
 import pe.com.bootcamp.retrofitmvvm.data.entities.discount.Discount
 import pe.com.bootcamp.retrofitmvvm.data.entities.discount.DiscountResponse
+import pe.com.bootcamp.retrofitmvvm.data.entities.rickmorty.CharacterResponse
+import pe.com.bootcamp.retrofitmvvm.data.entities.vacation.VacationPost
 import pe.com.bootcamp.retrofitmvvm.data.repository.BCPRepository
 
 
@@ -23,6 +26,12 @@ class BCPViewModel @ViewModelInject constructor(private val repository: BCPRepos
 
     private val _discount = MutableLiveData<List<Discount>>()
     val discount: LiveData<List<Discount>> = _discount
+
+    private val _vacationSaved = MutableLiveData<String>()
+    val vacationSaved: LiveData<String> = _vacationSaved
+
+    private val _character = MutableLiveData<CharacterResponse>()
+    val character: LiveData<CharacterResponse> = _character
 
 
     fun doDashboardFetch() {
@@ -67,6 +76,59 @@ class BCPViewModel @ViewModelInject constructor(private val repository: BCPRepos
             when (result) {
                 is Result.Success -> {
                     _discount.value = result.data.discounts
+
+                }
+                is Result.ApiError -> _onMessageError.postValue(result.exception)
+
+
+            }
+
+        }
+
+
+    }
+
+    fun doSaveVacation(post: VacationPost) {
+        _isViewLoading.postValue(true)
+
+        viewModelScope.launch {
+
+            val result: Result<GenericResponse> = withContext(Dispatchers.IO) {
+                repository.saveVacation(post)
+            }
+
+
+            _isViewLoading.postValue(false)
+
+            when (result) {
+                is Result.Success -> {
+                    _vacationSaved.value = result.data.message
+
+                }
+                is Result.ApiError -> _onMessageError.postValue(result.exception)
+
+
+            }
+
+        }
+
+
+    }
+
+    fun doGetCharacter(id: String) {
+        _isViewLoading.postValue(true)
+
+        viewModelScope.launch {
+
+            val result: Result<CharacterResponse> = withContext(Dispatchers.IO) {
+                repository.getCharacterRickMorty(id = id)
+            }
+
+            _isViewLoading.postValue(false)
+
+            when (result) {
+                is Result.Success -> {
+                    _character.value = result.data
 
                 }
                 is Result.ApiError -> _onMessageError.postValue(result.exception)
