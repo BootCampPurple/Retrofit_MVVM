@@ -22,7 +22,7 @@ class DashboardActivity : BaseActivity() {
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root, R.id.claDashboard)
 
-
+        initializeUI()
 
         binding.butDiscount.setOnClickListener {
 
@@ -30,8 +30,22 @@ class DashboardActivity : BaseActivity() {
         }
     }
 
+    fun initializeUI() {
 
+        //safe null
+        //.let scope function
+        intent.getParcelableExtra<DashboardResponse>("value")?.let { response ->
 
+            binding.tviName.text = response.employee.fullName
+            binding.tviEmail.text = response.employee.email
+
+            binding.tviVacationPending.text =
+                "Vacaciones pendientes ${response.vacation.pendientes}"
+            binding.tviVacation.text = "Vacaciones ganadas ${response.vacation.ganados}"
+
+        }
+
+    }
 
 
 }
